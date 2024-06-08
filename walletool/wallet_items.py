@@ -177,6 +177,18 @@ class KeyWalletItem(WalletItem):
         return asecret
 
 
+class CKeyWalletItem(WalletItem):
+    item_type = 'ckey'
+
+    def get_address(self, version):
+        return public_key_to_bc_address(self.data['public_key'], version=version)
+
+    def get_pencrypted_private_key(self, version):
+        secret = privkey_to_secret(self.data['encrypted_private_key'])
+        asecret = secret_to_asecret(secret, version=version)
+        return asecret
+
+
 def parse_wallet_dict(wallet_dict):
     for key, value in wallet_dict.items():
         yield WalletItem.parse(key, value)

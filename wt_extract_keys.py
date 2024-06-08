@@ -1,6 +1,6 @@
 import argparse
 from walletool.wallet_files import read_wallet_dat
-from walletool.wallet_items import parse_wallet_dict, KeyWalletItem
+from walletool.wallet_items import parse_wallet_dict, KeyWalletItem, CKeyWalletItem
 from walletool.consts import addrtypes
 
 def main():
@@ -17,12 +17,19 @@ def main():
             raise ValueError('invalid version (see --help)')
         version = addrtypes[args.version]
     w_data = read_wallet_dat(args.filename)
+    #for a in w_data:
+    #	print(a,',  ',w_data[a])
     addr_tuples = []
     for item in parse_wallet_dict(w_data):
+        #print(item)
         if isinstance(item, KeyWalletItem):
+            print(item)
             address = item.get_address(version=version)
             privkey = item.get_private_key(version=version)
             addr_tuples.append((address, privkey))
+        elif isinstance(item, CKeyWalletItem):
+            print(item)
+            
     for address, privkey in addr_tuples:
         print(address, privkey)
 
